@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../.."
+		},
+		{
+			"path": "../../../../../../../../NJIT-DSA-2024-origin-Zhu-Zirui-main/NJIT-DSA-2024-origin-Zhu-Zirui-main/04-phonebook"
+		}
+	],
+	"settings": {
+		"java.debug.settings.onBuildFailureProceed": true
+	}
+}
