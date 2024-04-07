@@ -1,4 +1,7 @@
 package oy.tol.tra;
+import oy.tol.tra.StackInterface;
+import oy.tol.tra.ParenthesesException;
+
 
 /**
  * Uses the StackInterface implementation to check that parentheses in text files
@@ -61,5 +64,53 @@ public class ParenthesisChecker {
       //         throw an exception, wrong kind of parenthesis were in the text (e.g. "asfa ( asdf } sadf")
       // if the stack is not empty after all the characters have been handled
       //   throw an exception since the string has more opening than closing parentheses.
+      for (char ch : fromString.toCharArray()) {
+         if (isOpenParenthesis(ch)) {
+            try {
+               stack.push(ch);
+            } catch (Exception e) {
+               throw new ParenthesesException(ParenthesesException.ALLOCATION_FAILURE, "Failed to push opening parenthesis onto stack: " + e.getMessage());
+            }
+         } else if (isCloseParenthesis(ch)) {
+            Character popped = stack.pop();
+            if (popped == null) {
+               throw new ParenthesesException(ParenthesesException.EXTRA_CLOSING, "Too many closing parentheses found in the text.");
+            }
+            if (!isMatching(popped, ch)) {
+               throw new ParenthesesException(ParenthesesException.MISMATCHED, "Mismatched parenthesis: expected " + getMatchingParenthesis(popped) + " but found " + ch);
+            }
+         }
+      }
+
+      if (!stack.isEmpty()) {
+         throw new ParenthesesException(ParenthesesException.MISSING_CLOSING, "Too few closing parentheses found in the text.");
+      }
+
+      return fromString.length();
+      }
+
+      private static boolean isOpenParenthesis(char ch) {
+         return ch == '(' || ch == '[' || ch == '{';
+      }
+
+      private static boolean isCloseParenthesis(char ch) {
+         return ch == ')' || ch == ']' || ch == '}';
+      }
+
+      private static boolean isMatching(char open, char close) {
+         return (open == '(' && close == ')') || (open == '[' && close == ']') || (open == '{' && close == '}');
+      }
+
+      private static char getMatchingParenthesis(char ch) {
+         switch (ch) {
+            case '(':
+               return ')';
+            case '[':
+               return ']';
+            case '{':
+               return '}';
+            default:
+               return '\0';
+         }
    }
 }
